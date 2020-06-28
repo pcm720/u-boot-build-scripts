@@ -1,12 +1,3 @@
-[submodule "rkbin-radxa"]
-	path = rkbin-radxa
-	url = https://github.com/radxa/rkbin.git
-[submodule "rkbin"]
-	path = rkbin
-	url = https://github.com/rockchip-linux/rkbin.git
-[submodule "rockchip-u-boot"]
-	path = rockchip-u-boot
-	url = git@github.com:pcm720/rockchip-u-boot.git
 [submodule "arm-trusted-firmware"]
 	path = arm-trusted-firmware
 	url = https://github.com/ARM-software/arm-trusted-firmware.git
