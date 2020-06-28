@@ -1,0 +1,25 @@
+From 1edcdf8dd00b6f00bc310bcd4a22c02e49f2f33a Mon Sep 17 00:00:00 2001
+From: Hugh Cole-Baker <sigmaris@gmail.com>
+Date: Tue, 15 Oct 2019 21:25:13 +0000
+Subject: [PATCH] Set RK3399 baud rate to 1.5Mbps
+
+---
+ plat/rockchip/rk3399/rk3399_def.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plat/rockchip/rk3399/rk3399_def.h b/plat/rockchip/rk3399/rk3399_def.h
+index ba83242e..8d6ecfbe 100644
+--- a/plat/rockchip/rk3399/rk3399_def.h
++++ b/plat/rockchip/rk3399/rk3399_def.h
+@@ -17,7 +17,7 @@
+ /**************************************************************************
+  * UART related constants
+  **************************************************************************/
+-#define RK3399_BAUDRATE			115200
++#define RK3399_BAUDRATE			1500000
+ #define RK3399_UART_CLOCK		24000000
+
+ /******************************************************************************
+--
+2.20.1
+

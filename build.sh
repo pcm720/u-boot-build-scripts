@@ -1,41 +1,47 @@
-#!/bin/sh
-rm -rf ./out
+#!/bin/bash
+EXTRA="pcm720"
 
-# Compile
-cd rockchip-u-boot
-make ARCH=arm -j16 CROSS_COMPILE=aarch64-linux-gnu- distclean
-make ARCH=arm -j16 CROSS_COMPILE=aarch64-linux-gnu- pinebookpro-rk3399_defconfig all
+rm -rf build
+mkdir build
 
-# Get the binaries and clean up
-mkdir out
-mv ./u-boot-dtb.bin ./out/
-mv ./u-boot-dtb.img ./out/
-mv out ../
-make ARCH=arm -j16 CROSS_COMPILE=aarch64-linux-gnu- distclean
-cd ../
+##
+# ATF
+##
+cd arm-trusted-firmware
+# Apply ATF patches
+for p in ../patches/atf/*.patch;  do
+    git am $p
+done
+# Build ATF
+make realclean
+make CROSS_COMPILE=aarch64-linux-gnu- PLAT=rk3399 bl31
+cp build/rk3399/release/bl31/bl31.elf ../build/
+make realclean
+cd ..
 
-
-# Assemble image for SD/eMMC card
-mkdir sd
-cd sd
-mkimage -n rk3399 -T rksd -d ../rkbin/bin/rk33/rk3399_ddr_933MHz_v1.24.bin idbloader.img
-cat ../rkbin/bin/rk33/rk3399_miniloader_v1.19.bin >> idbloader.img
-../rkbin/tools/loaderimage --pack --uboot ../out/u-boot-dtb.img u-boot.img 0x200000
-cp ../rkbin/RKTRUST/RK3399TRUST.ini ./trust.ini
-sed -i "s:bin/:../rkbin/bin/:" trust.ini
-../rkbin/tools/trust_merger trust.ini
-cd ../
-mv ./sd ./out/
-
-# Create SPI firmware from Rockchip blobs and compiled U-Boot
-./rkbin/tools/loaderimage --pack --uboot ./out/u-boot-dtb.bin u-boot.img 0x200000
-./rkbin-radxa/tools/firmwareMerger -P spi.ini ./
-
-# Clean up
-rm ./u-boot.img
-mkdir ./out/spi
-rm ./Firmware.md5
-mv ./Firmware.img ./out/spi/spiflash.bin
-cd ./out/spi
-sha256sum spiflash.bin > spiflash.sha256
-cd .././
+##
+# U-Boot
+##
+cd u-boot
+# Apply U-Boot patches
+for p in ../patches/u-boot/*.patch;  do
+    git am $p
+done
+# Configure and copy ATF
+make mrproper
+cp ../build/bl31.elf ./
+make pinebook-pro-rk3399_defconfig
+# Build
+make -j$(getconf _NPROCESSORS_ONLN) CROSS_COMPILE=aarch64-linux-gnu- EXTRAVERSION=-$EXTRA
+# Generate SPI image
+tools/mkimage -n rk3399 -T rkspi -d tpl/u-boot-tpl-dtb.bin:spl/u-boot-spl-dtb.bin idbloader-spi.img
+cat <(dd if=idbloader-spi.img bs=512K conv=sync) u-boot.itb > spiflash.bin
+# Copy binaries to build directory
+cp spiflash.bin ../build
+cp idbloader-spi.img ../build
+cp idbloader.img ../build
+cp u-boot.itb ../build
+# Cleanup
+make mrproper
+# dd idbloader seek 64 conv notrunc
+# dd u-boot.itb seek16384 conv notrunc

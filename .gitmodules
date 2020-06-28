@@ -7,3 +7,9 @@
 [submodule "rockchip-u-boot"]
 	path = rockchip-u-boot
 	url = git@github.com:pcm720/rockchip-u-boot.git
+[submodule "arm-trusted-firmware"]
+	path = arm-trusted-firmware
+	url = https://github.com/ARM-software/arm-trusted-firmware.git
+[submodule "u-boot"]
+	path = u-boot
+	url = https://gitlab.denx.de/u-boot/u-boot
