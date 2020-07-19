@@ -1,0 +1,27 @@
+From 8cbca64f7db1dda2c4154e75a76777a5e9e5c225 Mon Sep 17 00:00:00 2001
+From: pcm720 <pcm720@users.noreply.github.com>
+Date: Sun, 19 Jul 2020 12:08:33 +0300
+Subject: [PATCH] defconfig: pinebook-pro: set BOOTDELAY to 1
+
+Shorten boot delay to speed up the boot process
+
+---
+ configs/pinebook-pro-rk3399_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configs/pinebook-pro-rk3399_defconfig b/configs/pinebook-pro-rk3399_defconfig
+index 76e5f36d58..d1765ac131 100644
+--- a/configs/pinebook-pro-rk3399_defconfig
++++ b/configs/pinebook-pro-rk3399_defconfig
+@@ -9,7 +9,7 @@ CONFIG_DEBUG_UART_CLOCK=24000000
+ CONFIG_SPL_SPI_FLASH_SUPPORT=y
+ CONFIG_SPL_SPI_SUPPORT=y
+ CONFIG_DEBUG_UART=y
+-CONFIG_BOOTDELAY=3
++CONFIG_BOOTDELAY=1
+ CONFIG_DEFAULT_FDT_FILE="rockchip/rk3399-pinebook-pro.dtb"
+ CONFIG_MISC_INIT_R=y
+ CONFIG_DISPLAY_BOARDINFO_LATE=y
+-- 
+2.27.0
+
